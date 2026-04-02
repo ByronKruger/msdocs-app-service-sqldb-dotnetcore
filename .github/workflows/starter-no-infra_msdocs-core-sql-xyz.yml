@@ -26,15 +26,6 @@ jobs:
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
-
       - name: Install dotnet ef
         run: dotnet tool install -g dotnet-ef --version 8.*
 
@@ -43,6 +34,15 @@ jobs:
 
       - name: Create migration bundle2
         run: dotnet ef migrations bundle --runtime linux-x64 --verbose --output ${{env.DOTNET_ROOT}}/myapp/migrationsbundle3
+
+      - name: dotnet publish
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     runs-on: ubuntu-latest
